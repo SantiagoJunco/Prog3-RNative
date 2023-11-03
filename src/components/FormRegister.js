@@ -52,7 +52,7 @@ class FormRegister extends Component {
         .catch( err =>{ 
             console.log(err) 
             this.setState({ mailExiste: err.message})
-        }) // validaciones adentro del catch
+        }) // validaciones adentro del catch 
     }
 
     render() {
@@ -82,6 +82,7 @@ class FormRegister extends Component {
                 <TextInput
                     style = {styles.input}
                     placeholder='Crea una minibio'
+                    keyboardType = 'default'
                     value={this.state.minibio}
                     onChangeText={(text) => this.setState({minibio:text})}
                 />
