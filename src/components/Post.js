@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
 
 import React, { Component } from 'react'
@@ -59,6 +59,11 @@ export default class Post extends Component {
         return (
         <View style={styles.containerPost}>
             <Text>{this.props.data.owner}</Text> 
+            <Image 
+            source={{uri: this.props.data.foto }}
+            style={styles.img}
+            resizeMode='contain'
+            />
             <Text>{this.props.data.descripcion}</Text>
             <View>
                 <Text>
@@ -102,5 +107,9 @@ export default class Post extends Component {
 const styles = StyleSheet.create({
     containerPost:{
         marginBottom:16
+    },
+    img:{
+        width: '100%',
+        height: 200
     }
 })
