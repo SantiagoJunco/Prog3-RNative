@@ -24,21 +24,23 @@ export default function TabNavigation() {
         name='NewPost' 
         component={NewPost}
         options={{
-            headerShown:false
+            headerShown:false,
+            tabBarIcon: ()=> <FontAwesome5 name='home' size={24} color='green' />
         }}
         />
-        <Tab.Screen 
+       {/*<Tab.Screen 
         name='Search' 
         component={Search}
         options={{
             headerShown:false
         }}
-        />
+    />*/}
         <Tab.Screen 
         name='Profile' 
         component={Profile}
         options={{
-            headerShown:false
+            headerShown:false,
+            tabBarIcon: ()=> <FontAwesome5 name='home' size={24} color='green' />
         }}
         />
     </Tab.Navigator>

@@ -18,8 +18,8 @@ export default function MainNavigation() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name='Home'
-          component={Home}
+          name='TabNavigation'
+          component={TabNavigation}
           options={{
             headerShown: false
           }} />
@@ -46,26 +46,13 @@ export default function MainNavigation() {
           name='Comments'
           component={Comments}
         />
-        {/* <Stack.Screen 
-        name='Login' 
-        component={Login}
-        options={{
-          headerShown: false
-        }}
-        />
+        {/* 
         <Stack.Screen 
         name='TabNavigation' 
         component={TabNavigation}
         options={{
             headerShown:false
         }}
-        />
-        <Stack.Screen
-          name='Comments'
-          component={Comments}
-          // options={{
-          //   headerShown: false
-          // }}
         />*/}
       </Stack.Navigator>
     </NavigationContainer>
