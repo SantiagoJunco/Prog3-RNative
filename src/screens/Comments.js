@@ -12,11 +12,11 @@ export default class Comments extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
         db
             .collection('posts')
             .doc(this.props.route.params.id)
             .onSnapshot((doc) => {
+                console.log(doc.data());
                 if (doc) {
                     this.setState({ post: doc.data() })
                 }
@@ -31,7 +31,7 @@ export default class Comments extends Component {
                     this.state.post !== null ?
                         this.state.post.comentarios.length !== 0 ?
                             <FlatList
-                                data={this.state.post.comentarios}
+                                data={this.state.post.comentarios.sort((a, b)=> b.createdAt - a.createdAt)}
                                 keyExtractor={(item) => item.createdAt.toString()}
                                 renderItem={({ item }) => <View>
                                     <Text>{item.owner}</Text>
