@@ -28,7 +28,10 @@ export default class NewPost extends Component {
                 comentarios: []
             }
         )
-            .then(() => this.props.navigation.navigate('Home'))
+            .then(() => {
+                this.props.navigation.navigate('Home')
+                this.setState({ paso1: true })
+            })
             .catch((err) => console.log(err))
     }
 
@@ -57,7 +60,7 @@ export default class NewPost extends Component {
                         :
                         <>
                             <FormNewPost
-                                onSubmit={(obj) => this.onSubmit(obj)}
+                                // onSubmit={(obj) => this.onSubmit(obj)}
                                 actualizarDescripcion={(desc) => this.actualizarDescripcion(desc)}
                                 estadoDescripcion={this.state.descripcion}
                             />
