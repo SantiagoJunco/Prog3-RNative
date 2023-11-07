@@ -15,7 +15,7 @@ export default class FormDescripcionPost extends Component {
         <View>
             
             <TextInput
-            placeholder='Agregá acá la descripcion de tu post' // arriba falta textInput pa la imagen
+            placeholder='Agregá acá la descripcion de tu post' 
             onChangeText={(text)=> this.props.actualizarDescripcion(text)}
             value={this.props.estadoDescripcion}
             style={styles.input}

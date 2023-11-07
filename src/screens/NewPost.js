@@ -14,10 +14,9 @@ export default class NewPost extends Component {
         }
     }
 
-
     onSubmit({
-        fotoUrl,
-        descripcion
+        descripcion,
+        fotoUrl
     }) {
         db.collection('posts').add(
             {
