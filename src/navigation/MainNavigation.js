@@ -18,8 +18,8 @@ export default function MainNavigation() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name='TabNavigation'
-          component={TabNavigation}
+          name='Register'
+          component={Register}
           options={{
             headerShown: false
           }} />
@@ -30,8 +30,8 @@ export default function MainNavigation() {
             headerShown: false
           }} />
         <Stack.Screen
-          name='Register'
-          component={Register}
+          name='TabNavigation'
+          component={TabNavigation}
           options={{
             headerShown: false
           }} />
@@ -42,18 +42,10 @@ export default function MainNavigation() {
             headerShown: false
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name='Comments'
           component={Comments}
         />
-        {/* 
-        <Stack.Screen 
-        name='TabNavigation' 
-        component={TabNavigation}
-        options={{
-            headerShown:false
-        }}
-        />*/}
       </Stack.Navigator>
     </NavigationContainer>
   )
