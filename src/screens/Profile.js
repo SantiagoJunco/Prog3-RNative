@@ -35,6 +35,7 @@ export default class Profile extends Component {
                     data: doc.data()
                 })
             })
+            arrDocs.sort((a, b)=> b.data.createdAt - a.data.createdAt)
             this.setState({
                 posteos: arrDocs
             }, () => console.log(this.state.posteos))
