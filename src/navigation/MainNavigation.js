@@ -8,7 +8,8 @@ import Register from '../screens/Register';
 import Login from '../screens/Login';
 import Comments from '../screens/Comments';
 import NewPost from '../screens/NewPost';
-import Home from '../screens/Home';
+import UserProfile from '../screens/UserProfile';
+import MyProfile from '../screens/MyProfile';
 
 
 const Stack = createNativeStackNavigator();
@@ -45,6 +46,14 @@ export default function MainNavigation() {
         <Stack.Screen
           name='Comments'
           component={Comments}
+        />
+        <Stack.Screen
+          name='UserProfile'
+          component={UserProfile}
+        />
+        <Stack.Screen
+          name='MyProfile'
+          component={MyProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>

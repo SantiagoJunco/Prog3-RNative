@@ -6,109 +6,118 @@ import { db, auth } from '../firebase/config';
 import firebase from 'firebase';
 
 export default class Post extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-            likes:0,
-            estaMiLike:false
+            likes: 0,
+            estaMiLike: false
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         let validacionLike = this.props.data.likes.includes(auth.currentUser.email)
         this.setState({
             estaMiLike: validacionLike
         })
     }
 
-    like(){
+    like() {
         db
-        .collection('posts')
-        .doc(this.props.id)
-        .update({
-            likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
-        })
-        .then((resp) =>{
-            this.setState({
-                estaMiLike:true
+            .collection('posts')
+            .doc(this.props.id)
+            .update({
+                likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
             })
-        })
-        .catch((err) => console.log(err))
+            .then((resp) => {
+                this.setState({
+                    estaMiLike: true
+                })
+            })
+            .catch((err) => console.log(err))
     }
 
-    unlike(){
+    unlike() {
         db
-        .collection('posts')
-        .doc(this.props.id)
-        .update({
-            likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
-        })
-        .then((resp) =>{
-            this.setState({
-                estaMiLike:false
+            .collection('posts')
+            .doc(this.props.id)
+            .update({
+                likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
             })
-        })
-        .catch((err) => console.log(err))
+            .then((resp) => {
+                this.setState({
+                    estaMiLike: false
+                })
+            })
+            .catch((err) => console.log(err))
     }
 
-    irAComentar(){
-        this.props.navigation.navigate('Comments',{id: this.props.id})
+    irAComentar() {
+        this.props.navigation.navigate('Comments', { id: this.props.id })
+    }
+
+    irAlPerfil(){
+        this.props.data.owner == auth.currentUser.email ?
+        this.props.navigation.navigate('MyProfile')
+        :
+        this.props.navigation.navigate('UserProfile', { user: this.props.data.owner })
     }
 
     render() {
         return (
-        <View style={styles.containerPost}>
-            <Text>{this.props.data.owner}</Text> 
-            <Image 
-            source={{uri: this.props.data.foto }}
-            style={styles.img}
-            resizeMode='contain'
-            />
-            <Text>{this.props.data.descripcion}</Text>
-            <View>
-                <Text>
-                    {this.props.data.likes.length}
-                </Text>
-                {
-                    this.state.estaMiLike ?
-                        <TouchableOpacity
-                        onPress={()=> this.unlike()}
-                        >
-                            <FontAwesome
-                            name='heart'
-                            color='red'
-                            size={24}
-                            />
-                        </TouchableOpacity>
-                        :
-                        <TouchableOpacity
-                        onPress={()=> this.like()}
-                        >
-                        <FontAwesome
-                        name='heart-o'
-                        color='red'
-                        size={24}
-                        />
-                        </TouchableOpacity>
-                }
-            </View>
-            <View>
-                <TouchableOpacity
-                    onPress={()=> this.irAComentar()}
-                >
-                    <Text>Comentarios: {this.props.data.comentarios.length}</Text>
+            <View style={styles.containerPost}>
+                <TouchableOpacity onPress={() => this.irAlPerfil()}>
+                    <Text>{this.props.data.owner}</Text>
                 </TouchableOpacity>
+                <Image
+                    source={{ uri: this.props.data.foto }}
+                    style={styles.img}
+                    resizeMode='contain'
+                />
+                <Text>{this.props.data.descripcion}</Text>
+                <View>
+                    <Text>
+                        {this.props.data.likes.length}
+                    </Text>
+                    {
+                        this.state.estaMiLike ?
+                            <TouchableOpacity
+                                onPress={() => this.unlike()}
+                            >
+                                <FontAwesome
+                                    name='heart'
+                                    color='red'
+                                    size={24}
+                                />
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity
+                                onPress={() => this.like()}
+                            >
+                                <FontAwesome
+                                    name='heart-o'
+                                    color='red'
+                                    size={24}
+                                />
+                            </TouchableOpacity>
+                    }
+                </View>
+                <View>
+                    <TouchableOpacity
+                        onPress={() => this.irAComentar()}
+                    >
+                        <Text>Comentarios: {this.props.data.comentarios.length}</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    containerPost:{
-        marginBottom:16
+    containerPost: {
+        marginBottom: 16
     },
-    img:{
+    img: {
         width: '100%',
         height: 200
     }
