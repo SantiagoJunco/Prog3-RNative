@@ -88,3 +88,10 @@ export default class UserProfile extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    signoutBtn: {
+        backgroundColor: 'red',
+        padding: 16
+    }
+})
