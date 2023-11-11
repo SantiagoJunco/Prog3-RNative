@@ -28,13 +28,14 @@ export default function TabNavigation() {
             tabBarIcon: ()=> <FontAwesome5 name='home' size={24} color='green' />
         }}
         />
-       {/*<Tab.Screen 
+       <Tab.Screen 
         name='Search' 
         component={Search}
         options={{
-            headerShown:false
+            headerShown:false,
+            tabBarIcon: ()=> <FontAwesome5 name='home' size={24} color='green' />
         }}
-    />*/}
+        />
         <Tab.Screen 
         name='Profile' 
         component={MyProfile}
