@@ -52,8 +52,21 @@ export default class UserProfile extends Component {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => <View>
                             <Text>Usuario: {item.data.name}</Text>
+                            {item.data.fotoPerfil != '' ?
+                                <Image
+                                    source={item.data.fotoPerfil}
+                                    style={styles.img}
+                                    resizeMode='contain'
+                                />
+                                :
+                                ''
+                            }
                             <Text>Email: {item.data.owner}</Text>
-                            <Text>Minibio: {item.data.minibio}</Text>
+                            {item.data.minibio ?
+                                <Text>Minibio: {item.data.minibio}</Text>
+                                :
+                                ''
+                            }
                         </View>
                         }
                     />
@@ -75,10 +88,3 @@ export default class UserProfile extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    signoutBtn: {
-        backgroundColor: 'red',
-        padding: 16
-    }
-})
