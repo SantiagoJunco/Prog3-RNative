@@ -45,62 +45,86 @@ export default class FormLogin extends Component {
         }
     }
 
-  render() {
-    return (
-      <View>
-        <Text>Logueate en IPHONIFY</Text>
-        <View>
-                <TextInput
-                    style = {styles.input}
-                    placeholder = 'Introduce tu email'
-                    keyboardType = 'email-address'
-                    value = {this.state.mail}
-                    onChangeText = { (text) => this.setState({mail: text, errores: {... this.state.errores, errorMail:''}}) }
-                />
-                 {this.state.errores.errorMail !== "" ? <Text>{this.state.errores.errorMail} </Text> : ''}
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Logueate en ReSport: Remeras Usadas</Text>
+                <View style={styles.formContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Introduce tu email'
+                        keyboardType='email-address'
+                        value={this.state.mail}
+                        onChangeText={(text) => this.setState({mail: text, errores: {... this.state.errores, errorMail:''}})}
+                    />
+                    {this.state.errores.errorMail !== "" ? <Text style={styles.errorText}>{this.state.errores.errorMail} </Text> : ''}
 
-                <TextInput
-                    style = {styles.input}
-                    placeholder = 'Introduce tu password'
-                    keyboardType = 'default'
-                    value = {this.state.password}
-                    secureTextEntry={true}
-                    onChangeText = { (text) => this.setState({password: text, errores: {... this.state.errores, errorPassword:''}}) }
-                />
-               {this.state.errores.errorPassword !== "" ? <Text>{this.state.errores.errorPassword} </Text> : ''}
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Introduce tu password'
+                        keyboardType='default'
+                        value={this.state.password}
+                        secureTextEntry={true}
+                        onChangeText={(text) => this.setState({password: text, errores: {... this.state.errores, errorPassword:''}})}
+                    />
+                    {this.state.errores.errorPassword !== "" ? <Text style={styles.errorText}>{this.state.errores.errorPassword} </Text> : ''}
 
-               {this.state.errMailOrPass !== '' ? <Text>{this.state.errMailOrPass}</Text> : ''}
+                    {this.state.errMailOrPass !== '' ? <Text style={styles.errorText}>{this.state.errMailOrPass}</Text> : ''}
 
-
-                 { this.state.mail == '' || this.state.password == ''
-                 ? 
-                 ''
-                 :
-                <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() => this.loguearUsuario(this.state.mail, this.state.password)}
-                >
-                    <Text>Iniciar sesión</Text>
-                </TouchableOpacity>
-                }
-        </View>
-      </View>
-    )
-  }
+                    { this.state.mail == '' || this.state.password == ''
+                    ? 
+                    ''
+                    :
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => this.loguearUsuario(this.state.mail, this.state.password)}
+                    >
+                        <Text style={styles.textBtn}>Iniciar sesión</Text>
+                    </TouchableOpacity>
+                    }
+                </View>
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-    input:{
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#2980B9',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#fff',
+    },
+    formContainer: {
+        width: '100%',
+    },
+    input: {
         borderWidth: 1,
-        borderColor: 'green',
-        marginBottom: 24
+        borderColor: 'white',
+        borderRadius: 10,
+        marginBottom: 24,
+        padding: 10,
+        color: '#fff',
     },
-    btn:{
-        backgroundColor:'purple',
-        padding:16,
-        marginBottom: 24
+    btn: {
+        backgroundColor: 'black',
+        padding: 16,
+        marginBottom: 24,
+        borderRadius: 10,
     },
-    textBtn:{
-        color:'white'
-    }
-})
+    textBtn: {
+        color: 'white',
+        textAlign: 'center',
+    },
+    errorText: {
+        color: 'white',
+        marginBottom: 10,
+    },
+});
