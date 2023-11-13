@@ -4,54 +4,60 @@ import { db, auth } from '../firebase/config'
 import firebase from 'firebase'
 
 export default class FormComentario extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             comentario: '',
         }
     }
 
-    enviarComentario(comentario){
+    enviarComentario(comentario) {
         db
-        .collection('posts')
-        .doc(this.props.postId)
-        .update({
-            comentarios: firebase.firestore.FieldValue.arrayUnion({
-                owner: auth.currentUser.email,
-                createdAt: Date.now(),
-                comentario: comentario
+            .collection('posts')
+            .doc(this.props.postId)
+            .update({
+                comentarios: firebase.firestore.FieldValue.arrayUnion({
+                    owner: auth.currentUser.email,
+                    createdAt: Date.now(),
+                    comentario: comentario
+                })
             })
-        })
+            this.setState({ comentario: '' });
     }
 
 
     render() {
-    return (
-      <View>
-        <TextInput
-            placeholder='Agrega tu comentario'
-            keyboardType='default'
-            onChangeText={(text)=> this.setState({comentario: text})}
-            value={this.state.comentario}
-            multiline={true}
-            numberOfLines={4}
-            style={styles.input}
-        />
-        <TouchableOpacity
-            onPress={()=> this.enviarComentario(this.state.comentario)}
-        >
-            <Text>
-                Enviar
-            </Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
+        return (
+            <View>
+                <TextInput
+                    placeholder='Agrega tu comentario'
+                    keyboardType='default'
+                    onChangeText={(text) => this.setState({ comentario: text })}
+                    value={this.state.comentario}
+                    multiline={true}
+                    numberOfLines={4}
+                    style={styles.input}
+                />
+                {this.state.comentario == ''
+                    ?
+                    ''
+                    :
+                    <TouchableOpacity
+                        onPress={() => this.enviarComentario(this.state.comentario)}
+                    >
+                        <Text>
+                            Enviar
+                        </Text>
+                    </TouchableOpacity>
+                }
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-    input:{
-        borderWidth:1,
-        borderColor:'green'
+    input: {
+        borderWidth: 1,
+        borderColor: 'green'
     }
 })

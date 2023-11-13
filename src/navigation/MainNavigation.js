@@ -17,7 +17,15 @@ const Stack = createNativeStackNavigator();
 export default function MainNavigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+      >
+      <Stack.Screen
+          name='Login'
+          component={Login}
+          options={{
+            headerShown: false
+          }}
+        />
         <Stack.Screen
           name='Register'
           component={Register}
@@ -36,13 +44,6 @@ export default function MainNavigation() {
           options={{
             headerShown: false
           }} />
-        <Stack.Screen
-          name='Login'
-          component={Login}
-          options={{
-            headerShown: false
-          }}
-        />
         <Stack.Screen
           name='Comments'
           component={Comments}

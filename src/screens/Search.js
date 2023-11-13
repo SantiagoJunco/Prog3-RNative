@@ -25,7 +25,10 @@ export default class Search extends Component {
 
   filtrarUsuarios(name) {
     let usuariosFiltrados = this.state.backup.filter(
-      (elm) => elm.data.name.toLowerCase().includes(name.toLowerCase())
+      (elm) => 
+      elm.data.name.toLowerCase().includes(name.toLowerCase())
+      ||
+      elm.data.owner.toLowerCase().includes(name.toLowerCase()) // electiva filtrado avanzado
     );
     this.setState({
       usuarios: usuariosFiltrados,

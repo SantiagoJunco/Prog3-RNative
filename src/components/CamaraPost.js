@@ -47,7 +47,11 @@ export default class CamaraPost extends Component {
             })
             .catch((err) => console.log(err))
     }
-
+    componentWillUnmount(){
+        this.setState({
+            mostrarCamara:false
+        })
+    }
 
 
     render() {
@@ -103,4 +107,3 @@ const styles = StyleSheet.create({
         height: 300
     }
 })
-
