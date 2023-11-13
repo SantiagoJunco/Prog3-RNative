@@ -1,109 +1,229 @@
-import { Text, View, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
-import React, { Component } from 'react'
-import { auth, db } from '../firebase/config'
-import Post from '../components/Post'
+import React, { Component } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, FlatList, Image, ScrollView } from 'react-native';
+import Post from '../components/Post';
+import { auth, db } from '../firebase/config';
 
 export default class MyProfile extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            usuarios: [],
-            posteos: []
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      usuarios: [],
+      posteos: [],
+    };
+  }
 
-    componentDidMount() {
-        db.collection('users').where('owner', '==', auth.currentUser.email).onSnapshot((docs) => {
-            let arrDocs = []
-            docs.forEach((doc) => {
-                arrDocs.push({
-                    id: doc.id,
-                    data: doc.data()
-                })
+  componentDidMount() {
+    console.log(auth.currentUser.email);
+    db.collection('users')
+      .where('owner', '==', auth.currentUser.email)
+      .onSnapshot((docs) => {
+        let arrDocs = [];
+        docs.forEach((doc) => {
+          arrDocs.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        this.setState({
+          usuarios: arrDocs,
+        });
+      });
+
+    db.collection('posts')
+      .where('owner', '==', auth.currentUser.email)
+      .onSnapshot((docs) => {
+        let arrDocs = [];
+        docs.forEach((doc) => {
+          arrDocs.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        arrDocs.sort((a, b) => b.data.createdAt - a.data.createdAt);
+        this.setState({
+          posteos: arrDocs,
+        });
+      });
+  }
+
+  logout() {
+    auth
+      .signOut()
+      .then(() => {
+        this.setState({
+          usuarios: [],
+          posteos: [],
+        });
+        this.props.navigation.navigate('Login');
+      })
+      .catch((error) => {
+        console.error('Error al cerrar sesión:', error);
+      });
+  }
+
+  borrarPosteo(postId) {
+    db.collection('posts').doc(postId).delete();
+  }
+
+  eliminarPerfil() {
+    const user = auth.currentUser;
+    const userEmail = user.email;
+    db.collection('users')
+      .where('owner', '==', userEmail)
+      .get()
+      .then((docs) => {
+        docs.forEach((doc) => {
+          doc.ref
+            .delete()
+            .then(() => {
+              console.log('Datos del usuario eliminados correctamente');
             })
-            this.setState({
-                usuarios: arrDocs
-            }, () => console.log(this.state.usuarios))
+            .catch((error) => {
+              console.error('Error al eliminar datos del usuario:', error);
+            });
+        });
+      })
+      .catch((error) => {
+        console.error('Error al buscar datos del usuario:', error);
+      });
 
-        })
+    user.delete()
+      .then(() => {
+        console.log('Usuario eliminado correctamente');
+        this.props.navigation.navigate('Login');
+      })
+      .catch((error) => {
+        console.error('Error al eliminar usuario:', error);
+      });
+  }
 
-        db.collection('posts').where('owner', '==', auth.currentUser.email).onSnapshot((docs) => {
-            let arrDocs = []
-            docs.forEach((doc) => {
-                arrDocs.push({
-                    id: doc.id,
-                    data: doc.data()
-                })
-            })
-            arrDocs.sort((a, b)=> b.data.createdAt - a.data.createdAt)
-            this.setState({
-                posteos: arrDocs
-            }, () => console.log(this.state.posteos))
+  render() {
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Tu perfil</Text>
+        <View style={styles.userInfo}>
+          <FlatList
+            data={this.state.usuarios}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.userDetails}>
+                <Text style={styles.userName}>Bienvenido {item.data.name}!</Text>
+                {item.data.fotoPerfil != '' ? (
+                  <Image
+                    source={item.data.fotoPerfil}
+                    style={styles.img}
+                    resizeMode='contain'
+                  />
+                ) : ''}
+                <Text style={styles.userInfoText}>Tu email: {item.data.owner}</Text>
+                {item.data.minibio ? (
+                  <Text style={styles.userInfoText}>Tu minibio: {item.data.minibio}</Text>
+                ) : ''}
+              </View>
+            )}
+          />
+        </View>
+        <View style={styles.userPosts}>
+          <Text style={styles.title}>Tus posteos</Text>
+          <Text style={styles.userInfoText}>Cantidad: {this.state.posteos.length} </Text>
+          <FlatList
+            data={this.state.posteos}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.postContainer}>
+                <Post navigation={this.props.navigation} data={item.data} id={item.id} />
+                <TouchableOpacity
+                  style={styles.deleteBtn}
+                  onPress={() => this.borrarPosteo(item.id)}>
+                  <Text style={styles.btnText}>Borrar posteo</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
 
-        })
-    }
-
-    logout() {
-        auth.signOut()
-        this.props.navigation.navigate('Login')
-    }
-    borrarPosteo(postId) {
-        db.collection('posts')
-          .doc(postId)
-          .delete()
-      }
-      
-
-    render() {
-        return (
-            <View>
-                <Text>Tu perfil</Text>
-                <View>
-                    <FlatList
-                        data={this.state.usuarios}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => <View>
-                            <Text>Bienvenido {item.data.name}!</Text>
-                            <Text>Tu email: {item.data.owner}</Text>
-                            <Text>Tu minibio: {item.data.minibio}</Text>
-                        </View>
-                        }
-                    />
-                </View>
-                <View>
-                    <Text>Tus posteos</Text>
-                    <Text>Cantidad: {this.state.posteos.length} </Text>
-                    <FlatList
-                        data={this.state.posteos}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) =>
-                            <View>
-                                <Post navigation={this.props.navigation} data={item.data} id={item.id} />
-                                <TouchableOpacity onPress={() => this.borrarPosteo(item.id)}>
-                                    <Text>Borrar posteo</Text>
-                                </TouchableOpacity>
-                            </View>
-                        }
-                    />
-                </View>
-
-
-                <View>
-                    <TouchableOpacity
-                        style={styles.signoutBtn}
-                        onPress={() => this.logout()}
-                    >
-                        <Text>Cerrar sesión</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        )
-    }
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.signoutBtn} onPress={() => this.logout()}>
+            <Text style={styles.cerrarSesion}>Cerrar sesión</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deleteBtn} onPress={() => this.eliminarPerfil()}>
+            <Text style={styles.btnText}>Eliminar Perfil</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    signoutBtn: {
-        backgroundColor: 'red',
-        padding: 16
-    }
-})
+  container: {
+    minHeight: '100vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#2980B9',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#fff',
+  },
+  userInfo: {
+    marginBottom: 20,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#fff',
+  },
+  userDetails: {
+    marginBottom: 15,
+  },
+  userPosts: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  postContainer: {
+    marginBottom: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 10,
+    padding: 15, 
+  },
+  signoutBtn: {
+    backgroundColor: 'red',
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  deleteBtn: {
+    backgroundColor: 'lightcoral',
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  img: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  btnText: {
+    color: 'black',
+    textAlign: 'center',
+  },
+  cerrarSesion: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  userInfoText: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: '#fff',
+  },
+});
