@@ -4,9 +4,7 @@ import React, { Component } from 'react'
 export default class FormDescripcionPost extends Component {
     constructor(props){
         super(props)
-        this.state ={
-            descripcionPost : ''
-        }
+        
     }
   render() {
     return (

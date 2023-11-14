@@ -55,6 +55,7 @@ export default class CamaraPost extends Component {
 
 
     render() {
+        console.log('Desde el render de camara')
         return (
             <View style={styles.container}>
                 {
@@ -77,11 +78,13 @@ export default class CamaraPost extends Component {
                                     source={({ uri: this.state.urlTemp })}
                                     style={styles.img}
                                 />
+                                
                                 <TouchableOpacity onPress={() => this.aceptarFoto()}>
                                     <Text>
                                         Aceptar foto
                                     </Text>
                                 </TouchableOpacity>
+                                
                                 <TouchableOpacity onPress={() => this.rechazarFoto()}>
                                     <Text>
                                         Rechazar foto

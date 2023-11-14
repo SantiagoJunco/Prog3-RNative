@@ -19,19 +19,19 @@ export default function MainNavigation() {
     <NavigationContainer>
       <Stack.Navigator
       >
-      <Stack.Screen
-          name='Login'
-          component={Login}
-          options={{
-            headerShown: false
-          }}
-        />
         <Stack.Screen
           name='Register'
           component={Register}
           options={{
             headerShown: false
           }} />
+        <Stack.Screen
+          name='Login'
+          component={Login}
+          options={{
+            headerShown: false
+          }}
+        />
         <Stack.Screen
           name='NewPost'
           component={NewPost}

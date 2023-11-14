@@ -123,24 +123,23 @@ export default class MyProfile extends Component {
             )}
           />
         </View>
-        <View style={styles.userPosts}>
+       
           <Text style={styles.title}>Tus posteos</Text>
           <Text style={styles.userInfoText}>Cantidad: {this.state.posteos.length} </Text>
           <FlatList
             data={this.state.posteos}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <View style={styles.postContainer}>
+              <>
                 <Post navigation={this.props.navigation} data={item.data} id={item.id} />
                 <TouchableOpacity
                   style={styles.deleteBtn}
                   onPress={() => this.borrarPosteo(item.id)}>
                   <Text style={styles.btnText}>Borrar posteo</Text>
                 </TouchableOpacity>
-              </View>
+              </>
             )}
           />
-        </View>
 
         <View style={styles.btnContainer}>
           <TouchableOpacity style={styles.signoutBtn} onPress={() => this.logout()}>
@@ -158,8 +157,6 @@ export default class MyProfile extends Component {
 const styles = StyleSheet.create({
   container: {
     minHeight: '100vh',
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
     backgroundColor: '#2980B9',
   },
@@ -177,19 +174,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#fff',
+    textAlign:'center'
   },
   userDetails: {
     marginBottom: 15,
   },
   userPosts: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  postContainer: {
-    marginBottom: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 10,
-    padding: 15, 
+    flex:1,
   },
   signoutBtn: {
     backgroundColor: 'red',
@@ -225,5 +216,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8,
     color: '#fff',
+    textAlign: 'center'
   },
 });
