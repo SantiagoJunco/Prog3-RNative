@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { auth, db } from '../firebase/config';
 import FormRegister from '../components/FormRegister';
 import CamaraPost from '../components/CamaraPost';
@@ -21,8 +21,18 @@ export default class Register extends Component {
       mailExiste: '',
       step1: true,
       userId: '',
+      loading: true // Electiva loader
     };
   }
+  componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+        this.setState({ loading: false });
+
+        if (user !== null) {
+            this.props.navigation.navigate('TabNavigation');
+        }
+    });
+}
 
   registrarUsuario = (name, email, password) => {
     if (this.state.name === '') {
@@ -58,11 +68,13 @@ export default class Register extends Component {
             minibio: this.state.minibio,
             fotoPerfil: this.state.fotoPerfil
           })
-            .then((resp) =>
+            .then((resp) =>{
               this.setState({
                 userId: resp.id,
               })
-            )/**/
+              this.props.navigation.navigate('TabNavigation')
+            }
+            )
           }
         )
         .catch((err) => {
@@ -81,7 +93,19 @@ export default class Register extends Component {
   mostrarCamara() {
     this.registrarUsuario(this.state.name, this.state.mail, this.state.password)
     this.setState({
-      step1: false
+      name: '',
+      mail: '',
+      password: '',
+      minibio: '',
+      fotoPerfil: '',
+      errors: {
+        errorName: '',
+        errorPassword: '',
+        errorMail: '',
+      },
+      mailExiste: '',
+      step1: false,
+      userId: '',
     })
   }
 
@@ -104,6 +128,13 @@ export default class Register extends Component {
 }
 
   render() {
+    if (this.state.loading) {
+      return (
+          <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color="blue" />
+          </View>
+      );
+  }
     return (
       <View style={styles.container}>
         {this.state.step1 ?

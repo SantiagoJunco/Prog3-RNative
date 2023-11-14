@@ -10,7 +10,6 @@ class FormRegister extends Component {
       minibio,
       errors,
       mailExiste,
-      step1
     } = this.props.state;
 
     return (
@@ -99,7 +98,6 @@ class FormRegister extends Component {
               <TouchableOpacity
                 onPress={() => {
                   this.props.mostrarCamara()
-                  console.log(this.props.state.step1)
                 }}
                 style={[styles.btn, { marginTop: 16 }]}  
               >

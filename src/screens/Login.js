@@ -1,34 +1,14 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import FormLogin from '../components/FormLogin';
-import { auth } from '../firebase/config';
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            loading: true, // Electiva loader
-        };
     }
 
-    componentDidMount() {
-        auth.onAuthStateChanged((user) => {
-            this.setState({ loading: false });
-
-            if (user !== null) {
-                this.props.navigation.navigate('TabNavigation');
-            }
-        });
-    }
 
     render() {
-        if (this.state.loading) {
-            return (
-                <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color="blue" />
-                </View>
-            );
-        }
 
         return (
             <View style={styles.container}>
