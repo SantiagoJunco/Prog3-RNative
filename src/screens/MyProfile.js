@@ -54,7 +54,7 @@ export default class MyProfile extends Component {
           usuarios: [],
           posteos: [],
         });
-        this.props.navigation.navigate('Login');
+        this.props.navigation.navigate('Register');
       })
       .catch((error) => {
         console.error('Error al cerrar sesión:', error);
@@ -76,6 +76,14 @@ export default class MyProfile extends Component {
           doc.ref
             .delete()
             .then(() => {
+              user.delete()
+                .then(() => {
+                  console.log('Usuario eliminado correctamente');
+                  this.props.navigation.navigate('Register');
+                })
+                .catch((error) => {
+                  console.error('Error al eliminar usuario:', error);
+                });
               console.log('Datos del usuario eliminados correctamente');
             })
             .catch((error) => {
@@ -87,14 +95,6 @@ export default class MyProfile extends Component {
         console.error('Error al buscar datos del usuario:', error);
       });
 
-    user.delete()
-      .then(() => {
-        console.log('Usuario eliminado correctamente');
-        this.props.navigation.navigate('Login');
-      })
-      .catch((error) => {
-        console.error('Error al eliminar usuario:', error);
-      });
   }
 
   render() {
@@ -123,23 +123,23 @@ export default class MyProfile extends Component {
             )}
           />
         </View>
-       
-          <Text style={styles.title}>Tus posteos</Text>
-          <Text style={styles.userInfoText}>Cantidad: {this.state.posteos.length} </Text>
-          <FlatList
-            data={this.state.posteos}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <>
-                <Post navigation={this.props.navigation} data={item.data} id={item.id} />
-                <TouchableOpacity
-                  style={styles.deleteBtn}
-                  onPress={() => this.borrarPosteo(item.id)}>
-                  <Text style={styles.btnText}>Borrar posteo</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          />
+
+        <Text style={styles.title}>Tus posteos</Text>
+        <Text style={styles.userInfoText}>Cantidad: {this.state.posteos.length} </Text>
+        <FlatList
+          data={this.state.posteos}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <>
+              <Post navigation={this.props.navigation} data={item.data} id={item.id} />
+              <TouchableOpacity
+                style={styles.deleteBtn}
+                onPress={() => this.borrarPosteo(item.id)}>
+                <Text style={styles.btnText}>Borrar posteo</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        />
 
         <View style={styles.btnContainer}>
           <TouchableOpacity style={styles.signoutBtn} onPress={() => this.logout()}>
@@ -174,13 +174,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#fff',
-    textAlign:'center'
+    textAlign: 'center'
   },
   userDetails: {
     marginBottom: 15,
   },
   userPosts: {
-    flex:1,
+    flex: 1,
   },
   signoutBtn: {
     backgroundColor: 'red',

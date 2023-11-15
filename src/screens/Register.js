@@ -20,21 +20,11 @@ export default class Register extends Component {
       },
       mailExiste: '',
       step1: true,
-      userId: '',
-      loading: true // Electiva loader
+      userId: ''
     };
   }
-  componentDidMount() {
-    auth.onAuthStateChanged((user) => {
-        this.setState({ loading: false });
 
-        if (user !== null) {
-            this.props.navigation.navigate('TabNavigation');
-        }
-    });
-}
-
-  registrarUsuario = (name, email, password) => {
+  registrarUsuario = (name, email, password, redirigir) => {
     if (this.state.name === '') {
       this.setState({
         errors: {
@@ -72,7 +62,9 @@ export default class Register extends Component {
               this.setState({
                 userId: resp.id,
               })
-              this.props.navigation.navigate('TabNavigation')
+              if(redirigir){
+                this.props.navigation.navigate('TabNavigation')
+              }
             }
             )
           }
@@ -91,7 +83,7 @@ export default class Register extends Component {
     }, () => this.saveImg(this.state.fotoPerfil) )
   }
   mostrarCamara() {
-    this.registrarUsuario(this.state.name, this.state.mail, this.state.password)
+    this.registrarUsuario(this.state.name, this.state.mail, this.state.password, false)
     this.setState({
       name: '',
       mail: '',
@@ -141,7 +133,7 @@ export default class Register extends Component {
           <FormRegister
             state={this.state}
             handleInputChange={(field, value) => this.setState({ [field]: value })}
-            registrarUsuario={() => this.registrarUsuario(this.state.name, this.state.mail, this.state.password)}
+            registrarUsuario={(name, mail, password, redirigir) => this.registrarUsuario(name, mail, password, redirigir)}
             mostrarCamara={() => this.mostrarCamara()}
             navigation={this.props.navigation}
           />
