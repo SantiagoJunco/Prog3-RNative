@@ -49,25 +49,36 @@ export default class Register extends Component {
     } else {
       auth
         .createUserWithEmailAndPassword(email, password)
-        .then((user) =>{
+        .then((user) => {
           db.collection('users')
-          .add({
-            owner: this.state.mail,
-            createdAt: Date.now(),
-            name: this.state.name,
-            minibio: this.state.minibio,
-            fotoPerfil: this.state.fotoPerfil
-          })
-            .then((resp) =>{
+            .add({
+              owner: this.state.mail,
+              createdAt: Date.now(),
+              name: this.state.name,
+              minibio: this.state.minibio,
+              fotoPerfil: this.state.fotoPerfil
+            })
+            .then((resp) => {
               this.setState({
                 userId: resp.id,
+                name: '',
+                mail: '',
+                password: '',
+                minibio: '',
+                fotoPerfil: '',
+                errors: {
+                  errorName: '',
+                  errorPassword: '',
+                  errorMail: '',
+                },
+                mailExiste: '',
               })
-              if(redirigir){
+              if (redirigir) {
                 this.props.navigation.navigate('TabNavigation')
               }
             }
             )
-          }
+        }
         )
         .catch((err) => {
           console.log(err);
@@ -78,55 +89,66 @@ export default class Register extends Component {
 
   actualizarFotoUrl(url) {
     this.setState({
-      fotoPerfil: url
+      fotoPerfil: url,
+      step1: true
+    }, () => { this.saveImg(this.state.fotoPerfil), console.log(this.state.step1) })
 
-    }, () => this.saveImg(this.state.fotoPerfil) )
   }
   mostrarCamara() {
-    this.registrarUsuario(this.state.name, this.state.mail, this.state.password, false)
-    this.setState({
-      name: '',
-      mail: '',
-      password: '',
-      minibio: '',
-      fotoPerfil: '',
-      errors: {
-        errorName: '',
-        errorPassword: '',
-        errorMail: '',
-      },
-      mailExiste: '',
-      step1: false,
-      userId: '',
-    })
+    if (this.state.name === '') {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          errorName: 'Ingresa un nombre válido',
+        },
+      });
+    } else if (this.state.mail === '' || this.state.mail.includes('@') === false) {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          errorMail: 'Verifica que el correo electrónico sea válido',
+        },
+      });
+    } else if (this.state.password === '' || this.state.password.length < 6) {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          errorPassword: 'La contraseña no puede estar vacía y debe tener más de 6 caracteres',
+        },
+      });
+    } else {
+      this.registrarUsuario(this.state.name, this.state.mail, this.state.password, false)
+      this.setState({
+        step1: false
+      })
+    }
   }
 
-  saveImg(url){
+  saveImg(url) {
     console.log('usa el save')
     db
-    .collection('users')
-    .doc(this.state.userId)
-    .update({
+      .collection('users')
+      .doc(this.state.userId)
+      .update({
         fotoPerfil: url
-    })
-    .then((resp) =>{
-      this.setState({
-        fotoPerfil: '',
-        step1: false
-      }, ()=> this.props.navigation.navigate('TabNavigation'))
-      
-    })
-    .catch((err) => console.log(err))
-}
+      })
+      .then((resp) => {
+        this.setState({
+          fotoPerfil: '',
+        }, () => this.props.navigation.navigate('TabNavigation'))
+
+      })
+      .catch((err) => console.log(err))
+  }
 
   render() {
     if (this.state.loading) {
       return (
-          <View style={styles.loaderContainer}>
-              <ActivityIndicator size="large" color="blue" />
-          </View>
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
       );
-  }
+    }
     return (
       <View style={styles.container}>
         {this.state.step1 ?
@@ -137,10 +159,10 @@ export default class Register extends Component {
             mostrarCamara={() => this.mostrarCamara()}
             navigation={this.props.navigation}
           />
-         :
-          <> 
-          <CamaraPost actualizarFotoUrl={(url) => this.actualizarFotoUrl(url)} saveImg ={(url) => this.saveImg(url)} />
-          </>
+          :
+          <CamaraPost
+            actualizarFotoUrl={(url) => this.actualizarFotoUrl(url)}
+            saveImg={(url) => this.saveImg(url)} />
         }
       </View>
     )
