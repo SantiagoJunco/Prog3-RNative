@@ -48,43 +48,42 @@ export default class Register extends Component {
       });
     } else {
       auth
-        .createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-          db.collection('users')
-            .add({
-              owner: this.state.mail,
-              createdAt: Date.now(),
-              name: this.state.name,
-              minibio: this.state.minibio,
-              fotoPerfil: this.state.fotoPerfil
-            })
-            .then((resp) => {
-              this.setState({
-                userId: resp.id,
-                name: '',
-                mail: '',
-                password: '',
-                minibio: '',
-                fotoPerfil: '',
-                errors: {
-                  errorName: '',
-                  errorPassword: '',
-                  errorMail: '',
-                },
-                mailExiste: '',
-              })
+      .createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        db.collection('users')
+          .add({
+            owner: this.state.mail,
+            createdAt: Date.now(),
+            name: this.state.name,
+            minibio: this.state.minibio,
+            fotoPerfil: this.state.fotoPerfil
+          })
+          .then((resp) => {
+            this.setState({
+              userId: resp.id,
+              name: '',
+              mail: '',
+              password: '',
+              minibio: '',
+              fotoPerfil: '',
+              errors: {
+                errorName: '',
+                errorPassword: '',
+                errorMail: '',
+              },
+              mailExiste: '',
+            }, () => {
               if (redirigir) {
-                this.props.navigation.navigate('TabNavigation')
+                this.props.navigation.navigate('TabNavigation');
               }
-            }
-            )
-        }
-        )
-        .catch((err) => {
-          console.log(err);
-          this.setState({ mailExiste: err.message });
-        });
-    }
+            });
+          })
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ mailExiste: err.message });
+      });
+    };
   };
 
   actualizarFotoUrl(url) {
@@ -135,20 +134,13 @@ export default class Register extends Component {
       .then((resp) => {
         this.setState({
           fotoPerfil: '',
-        }, () => this.props.navigation.navigate('TabNavigation'))
-
+        },()=> this.props.navigation.navigate('TabNavigation'))
       })
       .catch((err) => console.log(err))
   }
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="blue" />
-        </View>
-      );
-    }
+    
     return (
       <View style={styles.container}>
         {this.state.step1 ?

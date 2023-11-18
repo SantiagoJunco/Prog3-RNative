@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 
 export default class FormSearch extends Component {
   constructor(props) {
@@ -24,10 +24,6 @@ export default class FormSearch extends Component {
           name="busqueda"
           onChangeText={(text) => this.controlarCambios(text)}
         />
-        <Button
-          title="Buscar"
-          onPress={(evento) => this.evitarSubmit(evento)}
-        />
       </View>
     );
   }
@@ -39,13 +35,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     width: '100%',
+    backgroundColor: 'white',  
+    borderRadius: 10,  
+    marginBottom: 20
   },
   busqueda: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#2980B9', 
     borderWidth: 1,
     marginBottom: 10,
     padding: 10,
     width: '100%',
+    color: '#2980B9',
   },
 });

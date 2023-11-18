@@ -9,41 +9,54 @@ export default class MyProfile extends Component {
     this.state = {
       usuarios: [],
       posteos: [],
+      loading: true
     };
   }
 
   componentDidMount() {
-    console.log(auth.currentUser.email);
-    db.collection('users')
-      .where('owner', '==', auth.currentUser.email)
-      .onSnapshot((docs) => {
-        let arrDocs = [];
-        docs.forEach((doc) => {
-          arrDocs.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-        });
-        this.setState({
-          usuarios: arrDocs,
-        });
-      });
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      console.log('MyProfile se enfocó.');
+      this.cargarDatos();
+    });
+  }
 
-    db.collection('posts')
-      .where('owner', '==', auth.currentUser.email)
-      .onSnapshot((docs) => {
-        let arrDocs = [];
-        docs.forEach((doc) => {
-          arrDocs.push({
-            id: doc.id,
-            data: doc.data(),
+  cargarDatos() {
+    const currentUser = auth.currentUser;
+      db.collection('users')
+        .where('owner', '==', currentUser.email)
+        .onSnapshot((docs) => {
+          let arrDocs = [];
+          docs.forEach((doc) => {
+            arrDocs.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          });
+          this.setState({
+            usuarios: arrDocs,
+            loading: false
           });
         });
-        arrDocs.sort((a, b) => b.data.createdAt - a.data.createdAt);
-        this.setState({
-          posteos: arrDocs,
+
+      db.collection('posts')
+        .where('owner', '==', currentUser.email)
+        .onSnapshot((docs) => {
+          let arrDocs = [];
+          docs.forEach((doc) => {
+            arrDocs.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          });
+          arrDocs.sort((a, b) => b.data.createdAt - a.data.createdAt);
+          this.setState({
+            posteos: arrDocs,
+          });
         });
-      });
+  }
+
+  componentWillUnmount() {
+    this.focusListener();
   }
 
   logout() {
@@ -54,7 +67,7 @@ export default class MyProfile extends Component {
           usuarios: [],
           posteos: [],
         });
-        this.props.navigation.navigate('Register');
+        this.props.navigation.navigate('Login');
       })
       .catch((error) => {
         console.error('Error al cerrar sesión:', error);
@@ -94,10 +107,17 @@ export default class MyProfile extends Component {
       .catch((error) => {
         console.error('Error al buscar datos del usuario:', error);
       });
-
   }
 
   render() {
+    if (this.state.loading || this.state.usuarios.length ==0) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.loadingText}>Cargando...</Text>
+        </View>
+      );
+    }
+
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Tu perfil</Text>
@@ -217,5 +237,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#fff',
     textAlign: 'center'
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
   },
 });

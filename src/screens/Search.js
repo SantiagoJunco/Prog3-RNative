@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#2980B9'
   },
   usuarioItem: {
     padding: 10,
@@ -90,14 +91,16 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5
+    marginBottom: 5,
+    color: 'white'
   },
   userOwner: {
     fontSize: 16,
-    color: 'gray'
+    color: 'white'
   },
   text: {
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'white'
   }
 });

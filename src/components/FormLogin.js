@@ -35,7 +35,19 @@ export default class FormLogin extends Component {
             })
         } else {
             auth.signInWithEmailAndPassword(mail, password)
-            .then((user) => this.props.navigation.navigate("TabNavigation")) // aca home
+            .then((user) => {
+                this.setState({
+                    mail: '',
+                    password: '',
+                    errMailOrPass: '',
+                    contador: 0,
+                    errores: {
+                        errorPassword: '',
+                        errorMail: ''
+                    },
+                });
+                this.props.navigation.navigate("TabNavigation")
+            }) 
             .catch((err) => {console.log(err), this.setState({
                 errMailOrPass: this.state.contador > 0
                 ? `Ups! Tu email o la contraseña son incorrectos (${this.state.contador + 1} intento)`

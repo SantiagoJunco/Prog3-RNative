@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Text, View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
 class FormRegister extends Component {
+  constructor(props) {
+    super(props)
+  }
+  
   render() {
     const {
       name,
@@ -11,7 +15,6 @@ class FormRegister extends Component {
       errors,
       mailExiste,
     } = this.props.state;
-
     return (
       <View>
         <Text style={styles.title}>Regístrate en ReSports: Remeras Usadas</Text>
