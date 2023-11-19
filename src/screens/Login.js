@@ -10,6 +10,7 @@ export default class Login extends Component {
             loading: true
         }
     }
+    // COMENTO LA ELECTIVA DEL LOADING Y EL REMEMBER ME PORQUE SINO ME ROMPE EL REGISTER.
     // componentDidMount() {
     //     auth.onAuthStateChanged((user) => {
     //         this.setState({ loading: false });
